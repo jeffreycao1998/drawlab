@@ -1,55 +1,60 @@
 import React, { useLayoutEffect, useEffect, useState } from 'react';
+const io = require('socket.io-client');
+const socket = io('http://localhost:3001');
 
-const WhiteBoard = ({ socket } : { socket: any }) => {
-  let ctx: any;
+const WhiteBoard = () => {
   let drawing = false;
+  let lineWidth = 5;
+  let lineCap = 'round';
+  let color = 'blue';
 
-  useLayoutEffect(() => {
-    const canvas : any = document.getElementById('canvas');
-    ctx = canvas.getContext('2d');
-  });
-
-  const draw = (e: React.MouseEvent) => {
+  const draw = (x: number, y: number, lineWidth: number, lineCap: string, color: string, drawing: boolean) => {
     if (!drawing) return;
-    ctx.lineWidth = 10;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = 'blue';
-    ctx.lineTo(e.clientX - 8, e.clientY - 8);
-    ctx.stroke();
-    ctx.moveTo(e.clientX - 8, e.clientY - 8);
+    const canvas : any = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = lineCap;
+    ctx.strokeStyle = color;
 
-    socket.emit('draw', {
-      x: e.clientX,
-      y: e.clientY,
-      lineWidth: 10,
-      lineCap: 'round',
-      color: 'blue',
-      room: 100,
-      socketId: socket.id,
-    })
+    ctx.beginPath();
+    ctx.moveTo(x - 8, y - 8);
+    ctx.lineTo(x - 8, y - 8);
+    ctx.stroke();
+    ctx.closePath();
   }
+
+  const emitDraws = (socket: any, x: number, y: number, lineWidth: number, lineCap: string, color: string) => {
+    const data = {
+      x,
+      y,
+      lineWidth,
+      lineCap,
+      color,
+    };
+    
+    socket.emit('draw', data);
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     drawing = true;
-    draw(e);
+    draw(e.clientX, e.clientY, lineWidth, lineCap, color, drawing);
+    emitDraws(socket, e.clientX, e.clientY, lineWidth, lineCap, color);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!drawing) return;
-    draw(e);
+    draw(e.clientX, e.clientY, lineWidth, lineCap, color, drawing);
+    emitDraws(socket, e.clientX, e.clientY, lineWidth, lineCap, color);
   };
 
   const handleMouseUp = () => {
     drawing = false;
-    ctx.beginPath();
   };
 
-  if (socket.id) {
-    console.log('ran');
-    socket.on('draw', (data: any) => {
-      console.log(data);
-    });
-  }
+  socket.on('draw', ({ x, y, lineWidth, lineCap, color } : {x: number, y: number, lineWidth: number, lineCap: string, color: string}) => {
+    draw(x, y, lineWidth, lineCap, color, true);
+  });
 
   return (
     <canvas 

@@ -6,7 +6,7 @@ io.on('connection', socket => {
   console.log('a user connected');
 
   socket.on('draw', (data) => {
-    io.to(data.socketId).emit('draw', data);
+    socket.broadcast.emit('draw', data);
   });
 
   socket.on('disconnect', () => {
