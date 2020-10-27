@@ -1,10 +1,19 @@
-import React from 'react';
-import Canvas from './components/Canvas';
+import React, { useEffect, useState } from 'react';
+import WhiteBoard from './components/WhiteBoard';
+const io = require('socket.io-client');
 
 const App = () => {
+  const [socket, setSocket] = useState({});
+
+  useEffect(() => {
+    setSocket(io('http://localhost:3001'))
+  },[]);
+
   return (
     <div>
-      <Canvas />
+      <WhiteBoard
+        socket={socket}
+      />
     </div>
   );
 }
