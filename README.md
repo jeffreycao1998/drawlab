@@ -1,2 +1,2 @@
 # drawlab
-Collaborative Drawing App
+Collaborative Drawing App (in progress)
