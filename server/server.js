@@ -10,6 +10,7 @@ io.sockets.on('connection', socket => {
   console.log('User connected')
 
   socket.on('drawing', data => {
+    console.log(data);
     socket.broadcast.emit('drawing', data);
   });
 
