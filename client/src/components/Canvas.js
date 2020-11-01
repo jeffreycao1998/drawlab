@@ -1,32 +1,44 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import socket from '../socket';
 
-const StyledCanvas = styled.canvas`
-  background-color: white;
+const CanvasContainer = styled.div`
+  grid-area: canvas;
+  background-color: #8e44ad;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  #canvas {
+    background-color: white;
+  }
 `;
 
 const Canvas = () => {
+  const [ offsetPosition, setOffsetPosition ] = useState([]);
 
   const canvasRef = useRef(null);
-  const contextRef = useRef(null);
+  const ctxRef = useRef(null);
   let isDrawing = false;
   let prevX = null;
   let prevY = null;
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    console.log(canvas.getBoundingClientRect());
+    // console.log({offsetX: canvas.position().left, offsetY: canvas.position().top });
+    // setOffsetPosition({offsetX: canvas.position.left, offsetY: canvas.position.top });
 
     canvas.width = 500;
     canvas.height = 500;
 
-    const context = canvas.getContext('2d');
-    // context.scale(2, 2);
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    context.strokeStyle = 'red';
-    context.lineWidth = 5;
-    contextRef.current = context;
+    const ctx = canvas.getContext('2d');
+    // ctx.scale(2, 2);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 5;
+    ctxRef.current = ctx;
 
     socket.on('drawing', data => {
       draw(data);
@@ -41,11 +53,11 @@ const Canvas = () => {
   };
 
   const draw = ({ prevX, prevY, currX, currY }) => {
-    contextRef.current.beginPath();
-    contextRef.current.moveTo(prevX, prevY);
-    contextRef.current.lineTo(currX, currY);
-    contextRef.current.stroke();
-    contextRef.current.closePath();
+    ctxRef.current.beginPath();
+    ctxRef.current.moveTo(prevX, prevY);
+    ctxRef.current.lineTo(currX, currY);
+    ctxRef.current.stroke();
+    ctxRef.current.closePath();
   };
 
   const stopDrawing = () => {
@@ -86,14 +98,17 @@ const Canvas = () => {
   };
 
   return (
-    <StyledCanvas 
-      id='canvas'
-      onMouseDown={startDrawing}
-      onMouseMove={emitDrawing}
-      onMouseUp={stopDrawing}
-      onMouseLeave={stopDrawing}
-      ref={canvasRef}
-    />
+    <CanvasContainer>
+      <canvas
+        id='canvas'
+        onMouseDown={startDrawing}
+        onMouseMove={emitDrawing}
+        onMouseUp={stopDrawing}
+        onMouseLeave={stopDrawing}
+        ref={canvasRef}
+      >
+      </canvas>
+    </CanvasContainer>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   useLocation
@@ -6,35 +6,37 @@ import {
 
 import socket from '../socket';
 
+import Header from './Header';
+import ControlsLeft from './ControlsLeft';
 import Canvas from './Canvas';
+import ControlsRight from './ControlsRight';
 
 const StudioContainer = styled.div`
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
   position: relative;
-`;
-
-const Users = styled.ul`
-  position: absolute;
+  display: grid;
+  grid-template-areas: 
+    "header header header header header header header header header header header header"
+    "controlsLeft canvas canvas canvas canvas canvas canvas canvas canvas canvas controlsRight controlsRight";
+  grid-template-columns: 43px auto 300px;
+  grid-template-rows: 43px auto;
+  background-color: #9b59b6;
 `;
 
 const Studio = () => {
-  const [ roomUsers, setRoomUsers ] = useState([]);
+  const location = useLocation();
   
-  socket.emit('landedOnPage', useLocation().pathname);
-
-  socket.on('displayUsers', usersInRoom => {
-    console.log(usersInRoom);
-    setRoomUsers([...usersInRoom]);
-  });
-
-  const usersInRoom = roomUsers.map(user => <li className='user' key={user}>{user}</li>)
+  useEffect(() => {
+    socket.emit('landedOnPage', location.pathname);
+  },[location.pathname]);
 
   return(
     <StudioContainer>
-      <Users>{usersInRoom}</Users>
+      <Header />
+      <ControlsLeft />
       <Canvas />
+      <ControlsRight />
     </StudioContainer>
   );
 };
