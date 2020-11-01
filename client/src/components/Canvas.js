@@ -1,5 +1,10 @@
 import React, { useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import socket from '../socket';
+
+const StyledCanvas = styled.canvas`
+  background-color: white;
+`;
 
 const Canvas = () => {
 
@@ -12,13 +17,11 @@ const Canvas = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
 
-    canvas.width = window.innerWidth * 2;
-    canvas.height = window.innerHeight * 2;
-    canvas.style.height = `1920px`;
-    canvas.style.height = `1080px`;
+    canvas.width = 500;
+    canvas.height = 500;
 
     const context = canvas.getContext('2d');
-    context.scale(2, 2);
+    // context.scale(2, 2);
     context.lineCap = 'round';
     context.lineJoin = 'round';
     context.strokeStyle = 'red';
@@ -83,7 +86,7 @@ const Canvas = () => {
   };
 
   return (
-    <canvas 
+    <StyledCanvas 
       id='canvas'
       onMouseDown={startDrawing}
       onMouseMove={emitDrawing}

@@ -18,7 +18,7 @@ const Users = styled.ul`
 const Studio = () => {
   const [ roomUsers, setRoomUsers ] = useState([]);
 
-  socket.on('joined', usersInRoom => {
+  socket.on('displayUsers', usersInRoom => {
     setRoomUsers([...usersInRoom]);
   });
 
