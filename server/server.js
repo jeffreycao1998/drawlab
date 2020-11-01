@@ -36,8 +36,8 @@ io.sockets.on('connection', socket => {
     io.in(socket.data.room).emit('drawing', data);
   });
 
-  socket.on('landedOnPage', () => {
-    if (users.includes(socket)) {
+  socket.on('landedOnPage', path => {
+    if (users.includes(socket) && socket.data.room !== path.slice(1)) {
       const prevRoom = socket.data.room;
       socket.data.room = null;
 

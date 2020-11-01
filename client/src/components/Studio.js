@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import {
+  useLocation
+} from 'react-router-dom';
+
 import socket from '../socket';
 
 import Canvas from './Canvas';
@@ -17,6 +21,8 @@ const Users = styled.ul`
 
 const Studio = () => {
   const [ roomUsers, setRoomUsers ] = useState([]);
+  
+  socket.emit('landedOnPage', useLocation().pathname);
 
   socket.on('displayUsers', usersInRoom => {
     console.log(usersInRoom);
@@ -24,10 +30,6 @@ const Studio = () => {
   });
 
   const usersInRoom = roomUsers.map(user => <li className='user' key={user}>{user}</li>)
-
-  window.addEventListener('beforeunload', () => {
-    socket.emit('leave');
-  });
 
   return(
     <StudioContainer>

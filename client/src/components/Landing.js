@@ -4,7 +4,8 @@ import socket from '../socket';
 import sunset from '../images/sunset.jpg';
 import {
   BrowserRouter as Router,
-  Link
+  Link,
+  useLocation
 } from "react-router-dom";
 
 const LandingContainer = styled.div`
@@ -62,7 +63,7 @@ const Landing = () => {
     socket.emit('join', {name, room});
   };
 
-  socket.emit('landedOnPage');
+  socket.emit('landedOnPage', useLocation().pathname);
 
   return(
     <LandingContainer>
