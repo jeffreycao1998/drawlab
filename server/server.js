@@ -9,9 +9,22 @@ app.use(bodyParser.json());
 io.sockets.on('connection', socket => {
   console.log('User connected')
 
+  socket.on('join', data => {
+    const { name, room } = data;
+
+    socket.data = {
+      name,
+      room
+    };
+
+    socket.join(room);
+    io.in(room).emit('joined', data.name);
+  });
+
   socket.on('drawing', data => {
-    console.log(data);
-    socket.broadcast.emit('drawing', data);
+    const { room } = socket.data;
+
+    io.in(room).emit('drawing', data);
   });
 
   socket.on('disconnect', () => {
