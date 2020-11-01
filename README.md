@@ -1,14 +1,25 @@
 # drawlab
 Collaborative Drawing App (in progress)
 
-## Problems Encountered
+## Tough Problems Encountered
 
 # Problem 1 
-Problem: When you're drawing a line too fast the event listener isn't able to pick up on all the pixels your mouse went over.
+Problem: When you're drawing a line too fast the event listener isn't able to pick up on all the pixels your mouse went over. There'd be gaps of a couple pixels.
 
 Solution: Keep track of previous point encountered and connect it to the current mouse position with a straight line.
 
-Future: Create/find an algorithm to smooth out lines
+# Problem 2
+Problem: Seeing when a user was leaving the drawing page. window.location doesn't work well with React-Router.
+
+Solution: Found the useLocation hook from React-Router.
+
+# Problem 3
+Problem: The mouse positions don't correlate with the positions on the canvas.
+
+Solution: When emitting mouse locations, offset them by the same number of pixels the canvas is offsetted from the top left corner of browser.
+
+## Future Feature
+1. Smooth out lines when 
 
 ## Get Started
 
