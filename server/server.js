@@ -2,12 +2,12 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const bodyParser = require('body-parser');
 
-app.use(bodyParser.json());
+const users = [];
 
 io.sockets.on('connection', socket => {
   console.log('User connected')
+  socket.data = {};
 
   socket.on('join', data => {
     const { name, room } = data;
@@ -18,7 +18,13 @@ io.sockets.on('connection', socket => {
     };
 
     socket.join(room);
-    io.in(room).emit('joined', data.name);
+    users.push(socket);
+
+    const usersInRoom = users
+      .filter(socket => socket.data.room === room)
+      .map(socket => socket.data.name);
+
+    io.in(room).emit('joined', usersInRoom);
   });
 
   socket.on('drawing', data => {

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import socket from '../socket';
 
+import Canvas from './Canvas';
+
 const StudioContainer = styled.div`
   width: 100vw;
   height: 100vh;
@@ -9,16 +11,25 @@ const StudioContainer = styled.div`
   position: relative;
 `;
 
-const Studio = () => {
-  const [ users, setUsers ] = useState([]);
+const Users = styled.ul`
+  position: absolute;
+`;
 
-  socket.on('joined', name => {
-    setUsers(prev => [...prev, name]);
+const Studio = () => {
+  const [ roomUsers, setRoomUsers ] = useState([]);
+
+  socket.on('joined', usersInRoom => {
+    setRoomUsers([...usersInRoom]);
   });
+
+  const usersInRoom = roomUsers.map(user => <li className='user' key={user}>{user}</li>)
 
   return(
     <StudioContainer>
-
+      <Users>{usersInRoom}</Users>
+      <Canvas />
     </StudioContainer>
   );
 };
+
+export default Studio;

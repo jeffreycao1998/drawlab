@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,14 +6,15 @@ import {
 } from "react-router-dom";
 
 import Landing from './components/Landing';
-import Canvas from './components/Canvas';
+import Studio from './components/Studio';
 
 const App = () => {
+
   return (
     <Router>
       <Switch>
         <Route path="/:id">
-          <Canvas />
+          <Studio />
         </Route>
         <Route path="/">
           <Landing />
