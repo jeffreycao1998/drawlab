@@ -13,23 +13,38 @@ const getUsersInRoom = (users, room) => {
 
 io.sockets.on('connection', socket => {
   console.log('User connected')
+
   socket.data = {};
 
   socket.on('join', data => {
     const { name, room } = data;
+    socket.data = data;
 
-    socket.data = { name, room };
-
-    socket.join(room);
-    users.push(socket);
+    if (users.includes(socket)) {
+      const prevRoom = socket.data.room;
+      socket.join(room);
+    } else {
+      socket.join(room);
+      users.push(socket);
+    }
 
     const usersInRoom = getUsersInRoom(users, socket.data.room);
-
     io.in(room).emit('displayUsers', usersInRoom);
   });
 
   socket.on('drawing', data => {
     io.in(socket.data.room).emit('drawing', data);
+  });
+
+  socket.on('landedOnPage', () => {
+    if (users.includes(socket)) {
+      const prevRoom = socket.data.room;
+      socket.data.room = null;
+
+      const usersInRoom = getUsersInRoom(users, prevRoom);
+      io.in(prevRoom).emit('displayUsers', usersInRoom);
+      socket.leave(socket.data.room);
+    }
   });
 
   socket.on('disconnect', () => {

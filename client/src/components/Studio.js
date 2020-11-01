@@ -19,10 +19,15 @@ const Studio = () => {
   const [ roomUsers, setRoomUsers ] = useState([]);
 
   socket.on('displayUsers', usersInRoom => {
+    console.log(usersInRoom);
     setRoomUsers([...usersInRoom]);
   });
 
   const usersInRoom = roomUsers.map(user => <li className='user' key={user}>{user}</li>)
+
+  window.addEventListener('beforeunload', () => {
+    socket.emit('leave');
+  });
 
   return(
     <StudioContainer>

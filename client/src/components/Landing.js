@@ -62,6 +62,8 @@ const Landing = () => {
     socket.emit('join', {name, room});
   };
 
+  socket.emit('landedOnPage');
+
   return(
     <LandingContainer>
       <img src={sunset} alt='sunset-background' />
