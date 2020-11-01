@@ -6,14 +6,14 @@ import {
 } from "react-router-dom";
 
 import Landing from './components/Landing';
-import WhiteBoard from './components/WhiteBoard';
+import Canvas from './components/Canvas';
 
 const App = () => {
   return (
     <Router>
       <Switch>
         <Route path="/:id">
-          <WhiteBoard />
+          <Canvas />
         </Route>
         <Route path="/">
           <Landing />

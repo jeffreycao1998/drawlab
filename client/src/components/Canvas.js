@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import io from 'socket.io-client';
+import socket from '../socket';
 
-const socket = io('http://localhost:3001');
-
-const WhiteBoard = () => {
+const Canvas = () => {
 
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
@@ -16,8 +14,8 @@ const WhiteBoard = () => {
 
     canvas.width = window.innerWidth * 2;
     canvas.height = window.innerHeight * 2;
-    canvas.style.height = `${window.innerHeight}px`;
-    canvas.style.height = `${window.innerHeight}px`;
+    canvas.style.height = `1920px`;
+    canvas.style.height = `1080px`;
 
     const context = canvas.getContext('2d');
     context.scale(2, 2);
@@ -96,4 +94,4 @@ const WhiteBoard = () => {
   );
 };
 
-export default WhiteBoard;
+export default Canvas;
