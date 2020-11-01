@@ -15,19 +15,28 @@ const CanvasContainer = styled.div`
 `;
 
 const Canvas = () => {
-  const [ offsetPosition, setOffsetPosition ] = useState([]);
-
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   let isDrawing = false;
   let prevX = null;
   let prevY = null;
+  let offsetX = null;
+  let offsetY = null;
+
+  window.addEventListener('resize', () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const { x, y } = canvas.getBoundingClientRect();
+      offsetX = x;
+      offsetY = y;
+    }
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    console.log(canvas.getBoundingClientRect());
-    // console.log({offsetX: canvas.position().left, offsetY: canvas.position().top });
-    // setOffsetPosition({offsetX: canvas.position.left, offsetY: canvas.position.top });
+    const { x, y } = canvas.getBoundingClientRect();
+    offsetX = x;
+    offsetY = y;
 
     canvas.width = 500;
     canvas.height = 500;
@@ -43,7 +52,7 @@ const Canvas = () => {
     socket.on('drawing', data => {
       draw(data);
     });
-  },[]);
+  },[canvasRef.current]);
 
   const startDrawing = (e) => {
     isDrawing = true;
@@ -53,6 +62,10 @@ const Canvas = () => {
   };
 
   const draw = ({ prevX, prevY, currX, currY }) => {
+    prevX -= offsetX;
+    prevY -= offsetY;
+    currX -= offsetX;
+    currY -= offsetY;
     ctxRef.current.beginPath();
     ctxRef.current.moveTo(prevX, prevY);
     ctxRef.current.lineTo(currX, currY);
