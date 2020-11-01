@@ -9,7 +9,7 @@ Problem: When you're drawing a line too fast the event listener isn't able to pi
 Solution: Keep track of previous point encountered and connect it to the current mouse position with a straight line.
 
 # Problem 2
-Problem: Seeing when a user was leaving the drawing page. window.location doesn't work well with React-Router.
+Problem: Detecting when a user was leaving the drawing page(room). window.location doesn't work with React-Router other than root path.
 
 Solution: Found the useLocation hook from React-Router.
 
