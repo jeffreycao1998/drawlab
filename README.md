@@ -10,6 +10,7 @@ Solution: Keep track of previous point encountered and connect it to the current
 
 # Problem 2
 Problem: Detecting when a user was leaving the drawing page(room). window.location doesn't work with React-Router other than root path.
+![](https://i.imgur.com/jI2kVw6.png)
 
 Solution: Found the useLocation hook from React-Router.
 
